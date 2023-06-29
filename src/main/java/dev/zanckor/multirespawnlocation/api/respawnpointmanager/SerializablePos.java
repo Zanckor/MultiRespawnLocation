@@ -1,6 +1,7 @@
 package dev.zanckor.multirespawnlocation.api.respawnpointmanager;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 import java.io.Serializable;
 

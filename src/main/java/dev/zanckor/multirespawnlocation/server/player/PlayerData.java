@@ -22,6 +22,9 @@ public class PlayerData implements INBTSerializable<CompoundTag> {
     public void removeRespawnPoint(int positionOnList){
         respawnPoint.remove(positionOnList);
     }
+    public void removeRespawnPoint(String respawnName){
+        this.respawnPoint.removeIf(respawnPoint -> respawnPoint.getName().equals(respawnName));
+    }
 
     @Override
     public CompoundTag serializeNBT() {

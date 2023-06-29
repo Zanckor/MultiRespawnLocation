@@ -11,6 +11,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.BedBlock;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -36,6 +37,14 @@ public class CommandHandler {
                                 .executes((ctx ->
                                         teleportToRespawnPoint(ctx, StringArgumentType.getString(ctx, "respawnName"))
                                 ))))
+
+                .then(Commands.literal("remove")
+                        .then(Commands.argument("respawnName", StringArgumentType.string())
+                                .suggests(CommandHandler::availableRespawnPoints)
+                                .executes((ctx ->
+                                        removeRespawnPoint(ctx, StringArgumentType.getString(ctx,"respawnName"))))
+                        ))
+
         );
     }
 
@@ -58,14 +67,26 @@ public class CommandHandler {
 
         //Checks what respawnPoint is equal to selected, and teleport player
         for (RespawnPoint respawnPoint : PLAYER_DATA.getRespawnPoint()) {
-            if(respawnPoint.getName().equals(respawnName)){
+            if (respawnPoint.getName().equals(respawnName)) {
                 final BlockPos BLOCK_POS = respawnPoint.getPosition().toBlockPos();
 
-                PLAYER.teleportTo(BLOCK_POS.getX(), BLOCK_POS.getY(), BLOCK_POS.getZ());
-                return 1;
+                //Check if bed is still there
+                if (PLAYER.level().getBlockState(BLOCK_POS).getBlock() instanceof BedBlock) {
+                    PLAYER.teleportTo(BLOCK_POS.getX(), BLOCK_POS.getY(), BLOCK_POS.getZ());
+                    return 1;
+                }
             }
         }
 
         return 0;
+    }
+
+    private static int removeRespawnPoint(CommandContext<CommandSourceStack> ctx, String respawnName) {
+        final Player PLAYER = ctx.getSource().getPlayer();
+        final PlayerData PLAYER_DATA = PlayerDataProvider.getPlayer(PLAYER);
+
+        PLAYER_DATA.removeRespawnPoint(respawnName);
+
+        return 1;
     }
 }
