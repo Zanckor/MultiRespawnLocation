@@ -1,8 +1,9 @@
 package dev.zanckor.multirespawnlocation;
 
 import com.mojang.logging.LogUtils;
+import dev.zanckor.multirespawnlocation.common.network.NetworkHandler;
 import dev.zanckor.multirespawnlocation.core.config.server.MultiRespawn;
-import dev.zanckor.multirespawnlocation.server.player.PlayerDataProvider;
+import dev.zanckor.multirespawnlocation.server.capability.PlayerDataProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +18,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
-import static dev.zanckor.multirespawnlocation.server.player.PlayerDataProvider.PLAYER_DATA_CAPABILITY;
+import static dev.zanckor.multirespawnlocation.server.capability.PlayerDataProvider.PLAYER_DATA_CAPABILITY;
 
 @Mod(MultiRespawnLocation.MOD_ID)
 public class MultiRespawnLocation {
@@ -28,6 +29,9 @@ public class MultiRespawnLocation {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         MinecraftForge.EVENT_BUS.register(this);
+
+        LOGGER.debug("Registering network");
+        NetworkHandler.register();
 
         LOGGER.debug("Registering config files");
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, MultiRespawn.SPEC, "multi-respawn-server.toml");

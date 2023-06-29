@@ -2,9 +2,11 @@ package dev.zanckor.multirespawnlocation.common.event;
 
 import dev.zanckor.multirespawnlocation.api.respawnpointmanager.RespawnPoint;
 import dev.zanckor.multirespawnlocation.api.respawnpointmanager.SerializablePos;
+import dev.zanckor.multirespawnlocation.common.network.SendQuestPacket;
+import dev.zanckor.multirespawnlocation.common.network.message.CapabilitiesToClient;
 import dev.zanckor.multirespawnlocation.core.config.server.MultiRespawn;
-import dev.zanckor.multirespawnlocation.server.player.PlayerData;
-import dev.zanckor.multirespawnlocation.server.player.PlayerDataProvider;
+import dev.zanckor.multirespawnlocation.server.capability.PlayerData;
+import dev.zanckor.multirespawnlocation.server.capability.PlayerDataProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
@@ -23,7 +25,7 @@ public class PlayerEventHandler {
 
     public static void addRespawnPoint(Player player, BlockPos blockPos) {
         final PlayerData PLAYER_DATA = PlayerDataProvider.getPlayer(player);
-        final RespawnPoint RESPAWN_POINT = new RespawnPoint(new SerializablePos(blockPos), "respawn_" + PLAYER_DATA.getRespawnPoint().size(), player.level().dimension());
+        final RespawnPoint RESPAWN_POINT = new RespawnPoint(new SerializablePos(blockPos), "respawn_" + PLAYER_DATA.getRespawnPoint().size());
 
         if (PLAYER_DATA.getRespawnPoint().size() < MultiRespawn.RESPAWN_LOCATION_LIMIT.get()) {
 
@@ -36,6 +38,10 @@ public class PlayerEventHandler {
             }
 
             PLAYER_DATA.addRespawnPoint(RESPAWN_POINT);
+
         }
+
+        //Update capabilities to client
+        SendQuestPacket.TO_CLIENT(player, new CapabilitiesToClient(PlayerDataProvider.getPlayer(player)));
     }
 }

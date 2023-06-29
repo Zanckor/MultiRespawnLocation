@@ -14,26 +14,22 @@ import java.util.function.Supplier;
 
 public class ChangeRespawnPoint {
     BlockPos blockPos;
-    ResourceKey<Level> levelResourceKey;
 
-    public ChangeRespawnPoint(BlockPos blockPos, ResourceKey<Level> levelResourceKey) {
+    public ChangeRespawnPoint(BlockPos blockPos) {
         this.blockPos = blockPos;
-        this.levelResourceKey = levelResourceKey;
     }
 
     public void encodeBuffer(FriendlyByteBuf buf) {
         buf.writeBlockPos(blockPos);
-        buf.writeResourceKey(levelResourceKey);
     }
 
     public ChangeRespawnPoint(FriendlyByteBuf buf) {
         blockPos = buf.readBlockPos();
-        levelResourceKey = buf.readResourceKey(Registries.DIMENSION);
     }
 
     public static void handle(ChangeRespawnPoint msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerHandler.changeRespawnPoint(ctx.get().getSender(), msg.blockPos, msg.levelResourceKey);
+            ServerHandler.changeRespawnPoint(ctx.get().getSender(), msg.blockPos);
         });
 
         ctx.get().setPacketHandled(true);

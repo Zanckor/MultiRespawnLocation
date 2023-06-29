@@ -1,4 +1,4 @@
-package dev.zanckor.multirespawnlocation.server.player;
+package dev.zanckor.multirespawnlocation.server.capability;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

@@ -1,4 +1,4 @@
-package dev.zanckor.multirespawnlocation.server.player;
+package dev.zanckor.multirespawnlocation.server.capability;
 
 import dev.zanckor.multirespawnlocation.api.respawnpointmanager.RespawnPoint;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +11,8 @@ import java.util.List;
 public class PlayerData implements INBTSerializable<CompoundTag> {
     private List<RespawnPoint> respawnPoint = new ArrayList<>();
 
+
+
     public List<RespawnPoint> getRespawnPoint() {
         return respawnPoint;
     }
@@ -18,13 +20,12 @@ public class PlayerData implements INBTSerializable<CompoundTag> {
     public void addRespawnPoint(RespawnPoint respawnPoint) {
         this.respawnPoint.add(respawnPoint);
     }
-
-    public void removeRespawnPoint(int positionOnList){
-        respawnPoint.remove(positionOnList);
-    }
     public void removeRespawnPoint(String respawnName){
         this.respawnPoint.removeIf(respawnPoint -> respawnPoint.getName().equals(respawnName));
     }
+
+
+
 
     @Override
     public CompoundTag serializeNBT() {
@@ -41,6 +42,9 @@ public class PlayerData implements INBTSerializable<CompoundTag> {
     public void copyForRespawn(PlayerData oldStore) {
         respawnPoint = oldStore.respawnPoint;
     }
+
+
+
 
 
     private byte[] serializeList(List<?> list) {

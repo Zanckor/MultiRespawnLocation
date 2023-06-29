@@ -1,5 +1,6 @@
 package dev.zanckor.multirespawnlocation.common.network;
 
+import dev.zanckor.multirespawnlocation.common.network.message.CapabilitiesToClient;
 import dev.zanckor.multirespawnlocation.common.network.message.ChangeRespawnPoint;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
@@ -25,5 +26,9 @@ public class NetworkHandler {
         CHANNEL.messageBuilder(ChangeRespawnPoint.class, index++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(ChangeRespawnPoint::encodeBuffer).decoder(ChangeRespawnPoint::new)
                 .consumerNetworkThread(ChangeRespawnPoint::handle).add();
+
+        CHANNEL.messageBuilder(CapabilitiesToClient.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CapabilitiesToClient::encodeBuffer).decoder(CapabilitiesToClient::new)
+                .consumerNetworkThread(CapabilitiesToClient::handle).add();
     }
 }
